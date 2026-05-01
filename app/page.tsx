@@ -1,5 +1,5 @@
-import ConceptWalkthrough from '@/components/concept-walkthrough'
+import { redirect } from "next/navigation"
 
 export default function Home() {
-  return <ConceptWalkthrough />
+  redirect("/dashboard")
 }
