@@ -1,0 +1,13 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #FAF8F5; --warm-white: #FFFFFF; --warm-gray-1: #F5F3F0; --warm-gray-2: #EDEAE6;
+  --warm-gray-3: #D6D2CC; --warm-gray-4: #B8B3AC; --warm-gray-5: #8B8680;
+  --warm-dark: #2C2C2C; --warm-dark-2: #4A4744; --warm-dark-3: #6B6660;
+  --accent: #D4654A; --accent-light: #FDF0EC;
+  --blue: #3C7BD4; --blue-light: #EBF2FC;
+  --amber: #D4A03C; --amber-light: #FDF6EB;
+  --teal: #3CAAA0; --teal-light: #EBF8F7;
+  --rose: #C4556A; --rose-light: #FCECEF;
+  --motive-navy: #1B2A4A; --motive-blue: #2563EB;
+}
+html, body { height: 100%; overflow: hidden; background: var(--cream); color: var(--warm-dark); font-family: 'Karla', system-ui, sans-serif; }
