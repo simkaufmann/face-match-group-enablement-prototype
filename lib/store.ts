@@ -125,6 +125,182 @@ const initialGroups: Group[] = [
       faceMatch: { enabled: false, source: "group" },
     },
   },
+  {
+    id: "g5",
+    name: "Midwest Division",
+    description: "Operations in IL, OH, MI, IN",
+    vehicleCount: 62,
+    driverCount: 71,
+    parentGroupId: null,
+    glsSettings: {
+      faceMatch: { enabled: null, source: "inherited" },
+    },
+  },
+  {
+    id: "g6",
+    name: "Southwest Division",
+    description: "Operations in TX, AZ, NM",
+    vehicleCount: 55,
+    driverCount: 63,
+    parentGroupId: null,
+    glsSettings: {
+      faceMatch: { enabled: null, source: "inherited" },
+    },
+  },
+  {
+    id: "g7",
+    name: "Southeast Division",
+    description: "Operations in FL, GA, NC, SC",
+    vehicleCount: 48,
+    driverCount: 54,
+    parentGroupId: null,
+    glsSettings: {
+      faceMatch: { enabled: null, source: "inherited" },
+    },
+  },
+  {
+    id: "g8",
+    name: "Pacific Northwest",
+    description: "Operations in WA, OR",
+    vehicleCount: 22,
+    driverCount: 26,
+    parentGroupId: "g1",
+    glsSettings: {
+      faceMatch: { enabled: null, source: "inherited" },
+    },
+  },
+  {
+    id: "g9",
+    name: "Chicago Metro",
+    description: "Chicago metropolitan area",
+    vehicleCount: 35,
+    driverCount: 40,
+    parentGroupId: "g5",
+    glsSettings: {
+      faceMatch: { enabled: null, source: "inherited" },
+    },
+  },
+  {
+    id: "g10",
+    name: "Dallas-Fort Worth",
+    description: "DFW metropolitan area",
+    vehicleCount: 28,
+    driverCount: 32,
+    parentGroupId: "g6",
+    glsSettings: {
+      faceMatch: { enabled: null, source: "inherited" },
+    },
+  },
+  {
+    id: "g11",
+    name: "Houston Metro",
+    description: "Houston metropolitan area",
+    vehicleCount: 24,
+    driverCount: 27,
+    parentGroupId: "g6",
+    glsSettings: {
+      faceMatch: { enabled: null, source: "inherited" },
+    },
+  },
+  {
+    id: "g12",
+    name: "Florida Operations",
+    description: "All Florida operations",
+    vehicleCount: 30,
+    driverCount: 35,
+    parentGroupId: "g7",
+    glsSettings: {
+      faceMatch: { enabled: null, source: "inherited" },
+    },
+  },
+  {
+    id: "g13",
+    name: "New York Metro",
+    description: "NYC and surrounding areas",
+    vehicleCount: 25,
+    driverCount: 28,
+    parentGroupId: "g2",
+    glsSettings: {
+      faceMatch: { enabled: null, source: "inherited" },
+    },
+  },
+  {
+    id: "g14",
+    name: "Long Haul - West",
+    description: "Cross-country routes - Western US",
+    vehicleCount: 18,
+    driverCount: 22,
+    parentGroupId: null,
+    glsSettings: {
+      faceMatch: { enabled: null, source: "inherited" },
+    },
+  },
+  {
+    id: "g15",
+    name: "Long Haul - East",
+    description: "Cross-country routes - Eastern US",
+    vehicleCount: 16,
+    driverCount: 19,
+    parentGroupId: null,
+    glsSettings: {
+      faceMatch: { enabled: null, source: "inherited" },
+    },
+  },
+  {
+    id: "g16",
+    name: "Local Delivery - Urban",
+    description: "Urban last-mile delivery",
+    vehicleCount: 42,
+    driverCount: 48,
+    parentGroupId: null,
+    glsSettings: {
+      faceMatch: { enabled: null, source: "inherited" },
+    },
+  },
+  {
+    id: "g17",
+    name: "Local Delivery - Suburban",
+    description: "Suburban delivery routes",
+    vehicleCount: 38,
+    driverCount: 44,
+    parentGroupId: null,
+    glsSettings: {
+      faceMatch: { enabled: null, source: "inherited" },
+    },
+  },
+  {
+    id: "g18",
+    name: "Refrigerated Fleet",
+    description: "Temperature-controlled vehicles",
+    vehicleCount: 28,
+    driverCount: 32,
+    parentGroupId: null,
+    glsSettings: {
+      faceMatch: { enabled: null, source: "inherited" },
+    },
+  },
+  {
+    id: "g19",
+    name: "Hazmat Certified",
+    description: "Hazardous materials transport",
+    vehicleCount: 12,
+    driverCount: 15,
+    parentGroupId: null,
+    glsSettings: {
+      faceMatch: { enabled: null, source: "inherited" },
+    },
+  },
+  {
+    id: "g20",
+    name: "Training Fleet",
+    description: "New driver training vehicles",
+    vehicleCount: 8,
+    driverCount: 24,
+    parentGroupId: null,
+    glsSettings: {
+      faceMatch: { enabled: null, source: "inherited" },
+    },
+  },
 ]
 
 const initialVehicles: Vehicle[] = [

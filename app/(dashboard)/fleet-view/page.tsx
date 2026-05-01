@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useAppStore } from "@/lib/store"
-import { Info, CheckCircle2, ChevronDown, X } from "lucide-react"
+import { Info, CheckCircle2, Circle, Search } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export default function FleetViewPage() {
@@ -11,16 +11,18 @@ export default function FleetViewPage() {
   const [editingDriverId, setEditingDriverId] = useState(false)
   const [locationUpdatesEnabled, setLocationUpdatesEnabled] = useState(true)
   const [driverAppData, setDriverAppData] = useState(true)
-  const [faceMatchId, setFaceMatchId] = useState(companySettings.faceMatchEnabled)
-  const [faceMatchTrip, setFaceMatchTrip] = useState(companySettings.faceMatchEnabled)
+  const [faceMatchEnabled, setFaceMatchEnabled] = useState(companySettings.faceMatchEnabled)
   const [selectedGroups, setSelectedGroups] = useState<string[]>([])
-  const [groupDropdownOpen, setGroupDropdownOpen] = useState(false)
+  const [groupSearchQuery, setGroupSearchQuery] = useState("")
 
-  // Get root-level groups
-  const rootGroups = groups.filter((g) => !g.parentGroupId)
+  // Get all groups and filter by search
+  const allGroups = groups
+  const filteredGroups = allGroups.filter((g) =>
+    g.name.toLowerCase().includes(groupSearchQuery.toLowerCase())
+  )
 
   const handleSaveDriverId = () => {
-    setCompanySettings({ faceMatchEnabled: faceMatchId })
+    setCompanySettings({ faceMatchEnabled: faceMatchEnabled })
     setEditingDriverId(false)
   }
 
@@ -32,12 +34,12 @@ export default function FleetViewPage() {
     )
   }
 
-  const removeGroup = (groupId: string) => {
-    setSelectedGroups((prev) => prev.filter((id) => id !== groupId))
+  const selectAllGroups = () => {
+    setSelectedGroups(allGroups.map((g) => g.id))
   }
 
-  const getGroupName = (groupId: string) => {
-    return groups.find((g) => g.id === groupId)?.name || groupId
+  const deselectAllGroups = () => {
+    setSelectedGroups([])
   }
 
   return (
@@ -103,122 +105,6 @@ export default function FleetViewPage() {
             {editingDriverId ? (
               /* Edit Mode */
               <div className="space-y-6">
-                {/* AI driver identification methods */}
-                <div>
-                  <p className="mb-3 text-sm font-medium text-gray-700">
-                    AI driver identification methods:
-                  </p>
-                  <div className="space-y-3">
-                    <label className="flex items-center gap-3">
-                      <input
-                        type="checkbox"
-                        checked={driverAppData}
-                        onChange={(e) => setDriverAppData(e.target.checked)}
-                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      />
-                      <span className="text-sm text-gray-700">Driver App data</span>
-                    </label>
-                    <div>
-                      <label className="flex items-center gap-3">
-                        <input
-                          type="checkbox"
-                          checked={faceMatchId}
-                          onChange={(e) => setFaceMatchId(e.target.checked)}
-                          className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                        />
-                        <span className="text-sm text-gray-700">Face Match (facial recognition)</span>
-                      </label>
-                      <p className="ml-7 mt-1 text-xs text-gray-500">
-                        Facial recognition is available when the driver-facing camera is turned on.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Group Selection - Only shown when Face Match is enabled */}
-                {faceMatchId && (
-                  <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
-                    <p className="mb-3 text-sm font-medium text-gray-700">
-                      Enable Face Match for specific groups:
-                    </p>
-                    
-                    {/* Selected Groups Tags */}
-                    {selectedGroups.length > 0 && (
-                      <div className="mb-3 flex flex-wrap gap-2">
-                        {selectedGroups.map((groupId) => (
-                          <span
-                            key={groupId}
-                            className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-800"
-                          >
-                            {getGroupName(groupId)}
-                            <button
-                              onClick={() => removeGroup(groupId)}
-                              className="ml-1 rounded-full p-0.5 hover:bg-blue-200"
-                            >
-                              <X className="h-3 w-3" />
-                            </button>
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Group Dropdown */}
-                    <div className="relative">
-                      <button
-                        onClick={() => setGroupDropdownOpen(!groupDropdownOpen)}
-                        className="flex w-full items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-left text-sm shadow-sm hover:bg-gray-50 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                      >
-                        <span className="text-gray-700">
-                          {selectedGroups.length === 0
-                            ? "Select groups..."
-                            : `${selectedGroups.length} group${selectedGroups.length > 1 ? "s" : ""} selected`}
-                        </span>
-                        <ChevronDown
-                          className={cn(
-                            "h-4 w-4 text-gray-400 transition-transform",
-                            groupDropdownOpen && "rotate-180"
-                          )}
-                        />
-                      </button>
-
-                      {groupDropdownOpen && (
-                        <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white py-1 shadow-lg">
-                          {rootGroups.map((group) => (
-                            <button
-                              key={group.id}
-                              onClick={() => toggleGroup(group.id)}
-                              className={cn(
-                                "flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-gray-100",
-                                selectedGroups.includes(group.id) && "bg-blue-50"
-                              )}
-                            >
-                              <input
-                                type="checkbox"
-                                checked={selectedGroups.includes(group.id)}
-                                onChange={() => {}}
-                                className="h-4 w-4 rounded border-gray-300 text-blue-600"
-                              />
-                              <div>
-                                <p className="font-medium text-gray-900">{group.name}</p>
-                                <p className="text-xs text-gray-500">
-                                  {group.vehicleCount} vehicles, {group.driverCount} drivers
-                                </p>
-                              </div>
-                            </button>
-                          ))}
-                          {rootGroups.length === 0 && (
-                            <p className="px-3 py-2 text-sm text-gray-500">No groups available</p>
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    <p className="mt-2 text-xs text-gray-500">
-                      Face Match will only be required for drivers in the selected groups. Leave empty to apply to all vehicles.
-                    </p>
-                  </div>
-                )}
-
                 {/* AI trip assignment methods */}
                 <div>
                   <p className="mb-3 text-sm font-medium text-gray-700">
@@ -234,17 +120,116 @@ export default function FleetViewPage() {
                       />
                       <span className="text-sm text-gray-700">Driver App data</span>
                     </label>
-                    <label className="flex items-center gap-3">
-                      <input
-                        type="checkbox"
-                        checked={faceMatchTrip}
-                        onChange={(e) => setFaceMatchTrip(e.target.checked)}
-                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      />
-                      <span className="text-sm text-gray-700">Face Match (facial recognition)</span>
-                    </label>
+                    <div>
+                      <label className="flex items-center gap-3">
+                        <input
+                          type="checkbox"
+                          checked={faceMatchEnabled}
+                          onChange={(e) => setFaceMatchEnabled(e.target.checked)}
+                          className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        />
+                        <span className="text-sm text-gray-700">Face Match (facial recognition)</span>
+                      </label>
+                      <p className="ml-7 mt-1 text-xs text-gray-500">
+                        Facial recognition is available when the driver-facing camera is turned on.
+                      </p>
+                    </div>
                   </div>
                 </div>
+
+                {/* Group Selection - Only shown when Face Match is enabled */}
+                {faceMatchEnabled && (
+                  <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                    <div className="mb-3 flex items-center justify-between">
+                      <p className="text-sm font-medium text-gray-700">
+                        Enable Face Match for specific groups:
+                      </p>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={selectAllGroups}
+                          className="text-xs font-medium text-blue-600 hover:text-blue-700"
+                        >
+                          Select all
+                        </button>
+                        <span className="text-gray-300">|</span>
+                        <button
+                          onClick={deselectAllGroups}
+                          className="text-xs font-medium text-blue-600 hover:text-blue-700"
+                        >
+                          Clear all
+                        </button>
+                      </div>
+                    </div>
+                    
+                    {/* Search */}
+                    <div className="relative mb-3">
+                      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Search groups..."
+                        value={groupSearchQuery}
+                        onChange={(e) => setGroupSearchQuery(e.target.value)}
+                        className="w-full rounded-md border border-gray-300 bg-white py-2 pl-9 pr-3 text-sm placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
+
+                    {/* Groups List */}
+                    <div className="max-h-64 space-y-1 overflow-y-auto rounded-md border border-gray-200 bg-white">
+                      {filteredGroups.length === 0 ? (
+                        <p className="px-3 py-4 text-center text-sm text-gray-500">
+                          No groups found
+                        </p>
+                      ) : (
+                        filteredGroups.map((group) => {
+                          const isSelected = selectedGroups.includes(group.id)
+                          const parentGroup = group.parentGroupId
+                            ? allGroups.find((g) => g.id === group.parentGroupId)
+                            : null
+                          return (
+                            <button
+                              key={group.id}
+                              onClick={() => toggleGroup(group.id)}
+                              className={cn(
+                                "flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-gray-50",
+                                isSelected && "bg-blue-50 hover:bg-blue-50"
+                              )}
+                            >
+                              {isSelected ? (
+                                <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-blue-600" />
+                              ) : (
+                                <Circle className="h-5 w-5 flex-shrink-0 text-gray-300" />
+                              )}
+                              <div className="min-w-0 flex-1">
+                                <p className={cn(
+                                  "truncate text-sm font-medium",
+                                  isSelected ? "text-blue-900" : "text-gray-900"
+                                )}>
+                                  {group.name}
+                                </p>
+                                <p className="truncate text-xs text-gray-500">
+                                  {parentGroup ? `${parentGroup.name} • ` : ""}
+                                  {group.vehicleCount} vehicles, {group.driverCount} drivers
+                                </p>
+                              </div>
+                            </button>
+                          )
+                        })
+                      )}
+                    </div>
+
+                    {/* Selected count */}
+                    <p className="mt-3 text-xs text-gray-500">
+                      {selectedGroups.length === 0 ? (
+                        "No groups selected. Face Match will apply to all vehicles."
+                      ) : (
+                        <>
+                          <span className="font-medium text-gray-700">{selectedGroups.length}</span>
+                          {" "}group{selectedGroups.length !== 1 ? "s" : ""} selected
+                        </>
+                      )}
+                    </p>
+                  </div>
+                )}
 
                 {/* Save Button */}
                 <div className="flex justify-end gap-3 border-t border-gray-200 pt-4">
@@ -264,40 +249,14 @@ export default function FleetViewPage() {
               </div>
             ) : (
               /* View Mode */
-              <div className="space-y-6">
-                {/* AI driver identification methods */}
-                <div>
-                  <p className="mb-3 text-sm text-gray-500">AI driver identification methods:</p>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-500" />
-                      <span className="text-sm text-gray-700">Driver App data</span>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2
-                          className={cn(
-                            "h-5 w-5",
-                            companySettings.faceMatchEnabled ? "text-green-500" : "text-gray-300"
-                          )}
-                        />
-                        <span className="text-sm text-gray-700">Face Match (facial recognition)</span>
-                      </div>
-                      <p className="ml-7 mt-1 text-xs text-gray-500">
-                        Facial recognition is available when the driver-facing camera is turned on.
-                      </p>
-                    </div>
+              <div>
+                <p className="mb-3 text-sm text-gray-500">AI trip assignment methods:</p>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-green-500" />
+                    <span className="text-sm text-gray-700">Driver App data</span>
                   </div>
-                </div>
-
-                {/* AI trip assignment methods */}
-                <div>
-                  <p className="mb-3 text-sm text-gray-500">AI trip assignment methods:</p>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-500" />
-                      <span className="text-sm text-gray-700">Driver App data</span>
-                    </div>
+                  <div>
                     <div className="flex items-center gap-2">
                       <CheckCircle2
                         className={cn(
@@ -307,6 +266,9 @@ export default function FleetViewPage() {
                       />
                       <span className="text-sm text-gray-700">Face Match (facial recognition)</span>
                     </div>
+                    <p className="ml-7 mt-1 text-xs text-gray-500">
+                      Facial recognition is available when the driver-facing camera is turned on.
+                    </p>
                   </div>
                 </div>
               </div>
