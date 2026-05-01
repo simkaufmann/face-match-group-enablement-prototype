@@ -2,7 +2,7 @@
 
 import { Header } from "@/components/dashboard/header"
 import { useAppStore } from "@/lib/store"
-import { Truck, Users, Shield, AlertTriangle } from "lucide-react"
+import { Truck, Users, Shield } from "lucide-react"
 import Link from "next/link"
 
 export default function DashboardPage() {
