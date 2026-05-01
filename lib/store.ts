@@ -37,6 +37,7 @@ export interface Group {
 export interface CompanySettings {
   faceMatchEnabled: boolean
   faceMatchMode: "fleet-wide" | "group-level"
+  faceMatchGroups: string[]
 }
 
 interface AppState {
@@ -324,6 +325,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   companySettings: {
     faceMatchEnabled: true,
     faceMatchMode: "group-level",
+    faceMatchGroups: [],
   },
   setCompanySettings: (settings) =>
     set((state) => ({

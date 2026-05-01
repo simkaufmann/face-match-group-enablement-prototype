@@ -12,7 +12,8 @@ export default function FleetViewPage() {
   const [locationUpdatesEnabled, setLocationUpdatesEnabled] = useState(true)
   const [driverAppData, setDriverAppData] = useState(true)
   const [faceMatchEnabled, setFaceMatchEnabled] = useState(companySettings.faceMatchEnabled)
-  const [selectedGroups, setSelectedGroups] = useState<string[]>([])
+  const [selectedGroups, setSelectedGroups] = useState<string[]>(companySettings.faceMatchGroups || [])
+  const [savedGroups, setSavedGroups] = useState<string[]>(companySettings.faceMatchGroups || [])
   const [groupSearchQuery, setGroupSearchQuery] = useState("")
 
   // Get all groups and filter by search
@@ -22,7 +23,17 @@ export default function FleetViewPage() {
   )
 
   const handleSaveDriverId = () => {
-    setCompanySettings({ faceMatchEnabled: faceMatchEnabled })
+    setCompanySettings({ 
+      faceMatchEnabled: faceMatchEnabled,
+      faceMatchGroups: selectedGroups 
+    })
+    setSavedGroups(selectedGroups)
+    setEditingDriverId(false)
+  }
+
+  const handleCancelEdit = () => {
+    setFaceMatchEnabled(companySettings.faceMatchEnabled)
+    setSelectedGroups(savedGroups)
     setEditingDriverId(false)
   }
 
@@ -41,6 +52,11 @@ export default function FleetViewPage() {
   const deselectAllGroups = () => {
     setSelectedGroups([])
   }
+
+  // Get saved group names for display
+  const savedGroupNames = savedGroups
+    .map((id) => allGroups.find((g) => g.id === id)?.name)
+    .filter(Boolean)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -83,7 +99,7 @@ export default function FleetViewPage() {
           <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
             <h2 className="text-lg font-semibold text-gray-900">Driver Identification</h2>
             <button
-              onClick={() => setEditingDriverId(!editingDriverId)}
+              onClick={() => editingDriverId ? handleCancelEdit() : setEditingDriverId(true)}
               className="rounded-md border border-gray-300 bg-white px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
             >
               {editingDriverId ? "Cancel" : "Edit"}
@@ -132,6 +148,9 @@ export default function FleetViewPage() {
                       </label>
                       <p className="ml-7 mt-1 text-xs text-gray-500">
                         Facial recognition is available when the driver-facing camera is turned on.
+                      </p>
+                      <p className="ml-7 mt-2 text-xs text-gray-500">
+                        Motive&apos;s Face Match feature utilizes facial recognition technology solely for the purpose of identifying commercial drivers for the safety and fleet administration of Motive customers who elect to employ the feature. The use of this feature is regulated by various privacy laws. By enabling this feature, you are representing to Motive that you have obtained all legally required consents from your employees, contractors, or other individuals to collect their biometric information and have fulfilled all other legal obligations set forth under any applicable privacy law. Motive assumes no responsibility for a customer&apos;s failure to obtain such required consents or comply with other legal requirements governing the use of biometric technology.
                       </p>
                     </div>
                   </div>
@@ -234,7 +253,7 @@ export default function FleetViewPage() {
                 {/* Save Button */}
                 <div className="flex justify-end gap-3 border-t border-gray-200 pt-4">
                   <button
-                    onClick={() => setEditingDriverId(false)}
+                    onClick={handleCancelEdit}
                     className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                   >
                     Cancel
@@ -269,6 +288,26 @@ export default function FleetViewPage() {
                     <p className="ml-7 mt-1 text-xs text-gray-500">
                       Facial recognition is available when the driver-facing camera is turned on.
                     </p>
+                    <p className="ml-7 mt-2 text-xs text-gray-500">
+                      Motive&apos;s Face Match feature utilizes facial recognition technology solely for the purpose of identifying commercial drivers for the safety and fleet administration of Motive customers who elect to employ the feature. The use of this feature is regulated by various privacy laws. By enabling this feature, you are representing to Motive that you have obtained all legally required consents from your employees, contractors, or other individuals to collect their biometric information and have fulfilled all other legal obligations set forth under any applicable privacy law. Motive assumes no responsibility for a customer&apos;s failure to obtain such required consents or comply with other legal requirements governing the use of biometric technology.
+                    </p>
+                    
+                    {/* Show enabled groups in view mode */}
+                    {companySettings.faceMatchEnabled && savedGroups.length > 0 && (
+                      <div className="ml-7 mt-4">
+                        <p className="mb-2 text-xs font-medium text-gray-700">
+                          Enabled for {savedGroups.length} group{savedGroups.length !== 1 ? "s" : ""}:
+                        </p>
+                        <div className="space-y-1.5">
+                          {savedGroupNames.map((name, index) => (
+                            <div key={index} className="flex items-center gap-2">
+                              <CheckCircle2 className="h-4 w-4 text-green-500" />
+                              <span className="text-sm text-gray-700">{name}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
